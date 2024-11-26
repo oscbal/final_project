@@ -5,6 +5,7 @@ subtitle: |
   | Data Science 1 with R (STAT 301-1)
 author: "Oscar Baliga"
 pagetitle: "PM1 Oscar Baliga"
+date: today
 
 format:
   html:
@@ -23,17 +24,10 @@ reference-location: margin
 citation-location: margin
 ---
 
-
-::: {.callout-tip icon=false}
-## Date Created: 11/2/2024
-:::
-
-::: {.callout-tip icon=false}
-
+::: {.callout-tip icon="false"}
 ## Github Repo Link
 
-[Oscar's Link](https://github.com/stat301-1-2024-fall/final-project-1-oscbal.git)
-
+[Oscar's Link](https://github.com/oscbal/final_project.git)
 :::
 
 ```{r}
@@ -51,47 +45,48 @@ bomber_data <- read.csv("data/operations.csv")
 
 ## Data Source
 
-This dataset consists of digitized paper mission reports from World War II, developed by Lt Col Jenns Robertson of the US Air Force. The records include data from U.S. and Royal Air Force missions, as well as contributions from Australian, New Zealand, and South African air forces. The dataset captures a live-action sequence of air warfare from 1939 to 1945^[This dataset can be found on Kaggle at the following link: https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download].
+This dataset consists of digitized paper mission reports from World War II, developed by Lt Col Jenns Robertson of the US Air Force. The records include data from U.S. and Royal Air Force missions, as well as contributions from Australian, New Zealand, and South African air forces. The dataset captures a live-action sequence of air warfare from 1939 to 1945^[[Link to Dataset](https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download)]
 
-##Why This Data
+## Why This Data
 
 As a double major in Data Science and History, I am fascinated by the intersection of these two fields. Analyzing historical data from significant events like World War II allows me to engage with history from a new perspective. The digitized mission reports provide opportunities to uncover patterns that traditional methods might overlook. I can investigate how factors such as altitude and aircraft type impacted mission outcomes. This approach not only enhances my understanding of military history but also develops my data analysis skills. Ultimately, I aim to provide new insights into World War II that can inform both academic and public discourse.
 
 ## Data Quality & Complexity Check
 
-Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include:
-- **Completeness**: Identifying if any critical information, such as mission dates or locations, is missing.
-- **Consistency**: Checking for uniformity in data entries, particularly in conflict names and geographic locations.
-- **Validity**: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories.
+Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include: 
+- **Completeness**: Identifying if any critical information, such as mission dates or locations, is missing. 
+- **Consistency**: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
+- **Validity**: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. 
 - **Complexity**: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.
 
 ## Potential Data Issues
 
 Several potential issues may affect the usability of this dataset:
 
--**Missing Values: **Some records lack details. All character values have a 100% complete rate, but the numeric data possess issues with completeness:
+\-**Missing Values:** Some records lack details. All character values have a 100% complete rate, but the numeric data possess issues with completeness:
 
-    Source ID: Complete rate of 0.023 (97.7% missing).
+```         
+Source ID: Complete rate of 0.023 (97.7% missing).
 
-    Target Latitude: Complete rate of 0.049 (95.1% missing).
+Target Latitude: Complete rate of 0.049 (95.1% missing).
 
-    Target Longitude: Complete rate of 0.049 (95.1% missing).
+Target Longitude: Complete rate of 0.049 (95.1% missing).
 
-    Total Weight (Tons): Complete rate of 0.066 (93.4% missing).
+Total Weight (Tons): Complete rate of 0.066 (93.4% missing).
 
-    High Explosives Weight (Tons): Complete rate of 0.18 (82% missing).
+High Explosives Weight (Tons): Complete rate of 0.18 (82% missing).
 
-    Attacking Aircraft: Complete rate of 0.298 (70.2% missing).
+Attacking Aircraft: Complete rate of 0.298 (70.2% missing).
 
-    Altitude (Hundreds of Feet): Complete rate of 0.322 (67.8% missing).
+Altitude (Hundreds of Feet): Complete rate of 0.322 (67.8% missing).
+```
 
-- **Data Entry Errors**: There might be inconsistencies in how missions and conflicts are labeled or recorded, leading to difficulties in categorization and analysis. Especially with datasets from the 1940s, it must be taken into consideration that decades of clerical errors may have altered the data.
+-   **Data Entry Errors**: There might be inconsistencies in how missions and conflicts are labeled or recorded, leading to difficulties in categorization and analysis. Especially with datasets from the 1940s, it must be taken into consideration that decades of clerical errors may have altered the data.
 
-- **Outliers**: There are many outliers for most numerical variables in the dataset:
-
+-   **Outliers**: There are many outliers for most numerical variables in the dataset:
 
     Takeoff Longitude: 429 outliers
-    
+
 ```{r}
 #| label: dist_1
 #| fig-cap: ""
@@ -107,13 +102,14 @@ bomber_data |>
   ) +
   theme_light()
 ```
-    
 
-    Target Latitude: 145 outliers
-    
+```         
+Target Latitude: 145 outliers
 
-    Target Longitude: 127 outliers
-    
+
+Target Longitude: 127 outliers
+```
+
 ```{r}
 #| label: dist_3
 #| fig-cap: ""
@@ -129,8 +125,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Altitude Hundreds of Feet: 29
-    
+```         
+Altitude Hundreds of Feet: 29
+```
+
 ```{r}
 #| label: dist_4
 #| fig-cap: ""
@@ -146,8 +144,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Airborne Aircraft: 1823
-    
+```         
+Airborne Aircraft: 1823
+```
+
 ```{r}
 #| label: dist_5
 #| fig-cap: ""
@@ -163,8 +163,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Attacking Aircraft: 9601
-    
+```         
+Attacking Aircraft: 9601
+```
+
 ```{r}
 #| label: dist_6
 #| fig-cap: ""
@@ -180,8 +182,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Bombing Aircraft: 1417
-    
+```         
+Bombing Aircraft: 1417
+```
+
 ```{r}
 #| label: dist_7
 #| fig-cap: ""
@@ -197,8 +201,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Aircraft Returned: 2
-    
+```         
+Aircraft Returned: 2
+```
+
 ```{r}
 #| label: dist_8
 #| fig-cap: ""
@@ -214,8 +220,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Aircraft Failed: 32
-  
+```         
+Aircraft Failed: 32
+```
+
 ```{r}
 #| label: dist_9
 #| fig-cap: ""
@@ -231,8 +239,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Aircraft Damaged: 2
-    
+```         
+Aircraft Damaged: 2
+```
+
 ```{r}
 #| label: dist_10
 #| fig-cap: ""
@@ -248,7 +258,9 @@ bomber_data |>
   theme_light()
 ```
 
-    Aircraft Lost: 18
+```         
+Aircraft Lost: 18
+```
 
 ```{r}
 #| label: dist_11
@@ -265,8 +277,10 @@ bomber_data |>
   theme_light()
 ```
 
-    High Explosives: 3537
-    
+```         
+High Explosives: 3537
+```
+
 ```{r}
 #| label: dist_12
 #| fig-cap: ""
@@ -282,8 +296,10 @@ bomber_data |>
   theme_light()
 ```
 
-    High Explosives Weight Tons: 7568
-    
+```         
+High Explosives Weight Tons: 7568
+```
+
 ```{r}
 #| label: dist_13
 #| fig-cap: ""
@@ -299,8 +315,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Incendiary Devices: 515
-    
+```         
+Incendiary Devices: 515
+```
+
 ```{r}
 #| label: dist_14
 #| fig-cap: ""
@@ -316,8 +334,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Incendiary Devices Weight Pounds: 69
-    
+```         
+Incendiary Devices Weight Pounds: 69
+```
+
 ```{r}
 #| label: dist_15
 #| fig-cap: ""
@@ -333,8 +353,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Incendiary Devices Weight Tons: 2081
-    
+```         
+Incendiary Devices Weight Tons: 2081
+```
+
 ```{r}
 #| label: dist_16
 #| fig-cap: ""
@@ -350,8 +372,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Fragmentation Devices: 457
-    
+```         
+Fragmentation Devices: 457
+```
+
 ```{r}
 #| label: dist_17
 #| fig-cap: ""
@@ -367,8 +391,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Fragmentation Devices Weight Pounds: 14
-    
+```         
+Fragmentation Devices Weight Pounds: 14
+```
+
 ```{r}
 #| label: dist_18
 #| fig-cap: ""
@@ -384,8 +410,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Fragmentation Devices Weight Tons: 2284
-    
+```         
+Fragmentation Devices Weight Tons: 2284
+```
+
 ```{r}
 #| label: dist_19
 #| fig-cap: ""
@@ -401,8 +429,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Total Weight Pounds: 136
-    
+```         
+Total Weight Pounds: 136
+```
+
 ```{r}
 #| label: dist_20
 #| fig-cap: ""
@@ -418,8 +448,10 @@ bomber_data |>
   theme_light()
 ```
 
-    Total Weight Tons: 9363
-    
+```         
+Total Weight Tons: 9363
+```
+
 ```{r}
 #| label: dist_21
 #| fig-cap: ""
@@ -435,12 +467,8 @@ bomber_data |>
   theme_light()
 ```
 
-
-
-
-- **Bias in Data Collection**: The dataset may reflect biases based on the documentation practices of the time or the focus on certain operations over others. Furthermore, many record of this age may have been lost/damaged during combat or during the period between the end of WW2 and digitization of the dataset.
+-   **Bias in Data Collection**: The dataset may reflect biases based on the documentation practices of the time or the focus on certain operations over others. Furthermore, many record of this age may have been lost/damaged during combat or during the period between the end of WW2 and digitization of the dataset.
 
 ## Misc
 
 The dataset offers a unique opportunity to understand the operational history of air forces during WWII. It serves not only as a historical record but also as a potential source for analyzing broader themes such as technological advancements in warfare and international military collaboration.
-
