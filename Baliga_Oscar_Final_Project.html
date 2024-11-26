@@ -3052,7 +3052,8 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-source" id="toc-data-source" class="nav-link active" data-scroll-target="#data-source">Data Source</a></li>
+  <li><a href="#introduction-to-the-data" id="toc-introduction-to-the-data" class="nav-link active" data-scroll-target="#introduction-to-the-data">Introduction to the Data</a></li>
+  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
   <li><a href="#why-this-data" id="toc-why-this-data" class="nav-link" data-scroll-target="#why-this-data">Why This Data</a></li>
   <li><a href="#data-quality-complexity-check" id="toc-data-quality-complexity-check" class="nav-link" data-scroll-target="#data-quality-complexity-check">Data Quality &amp; Complexity Check</a></li>
   <li><a href="#potential-data-issues" id="toc-potential-data-issues" class="nav-link" data-scroll-target="#potential-data-issues">Potential Data Issues</a></li>
@@ -3110,17 +3111,27 @@ Github Repo Link
 <p><a href="https://github.com/oscbal/final_project.git">Oscar’s Link</a></p>
 </div>
 </div>
+<section id="introduction-to-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="introduction-to-the-data">Introduction to the Data</h3>
+</section>
 <section id="data-source" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="data-source">Data Source</h2>
 <p>This dataset consists of digitized paper mission reports from World War II, developed by Lt Col Jenns Robertson of the US Air Force. The records include data from U.S. and Royal Air Force missions, as well as contributions from Australian, New Zealand, and South African air forces. The dataset captures a live-action sequence of air warfare from 1939 to 1945<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> <a href="https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download">Link to Dataset</a></p></div></div></section>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> <a href="https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download">Link to Dataset. Accessed on 11/05/24.</a></p></div></div></section>
 <section id="why-this-data" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-data">Why This Data</h2>
 <p>As a double major in Data Science and History, I am fascinated by the intersection of these two fields. Analyzing historical data from significant events like World War II allows me to engage with history from a new perspective. The digitized mission reports provide opportunities to uncover patterns that traditional methods might overlook. I can investigate how factors such as altitude and aircraft type impacted mission outcomes. This approach not only enhances my understanding of military history but also develops my data analysis skills. Ultimately, I aim to provide new insights into World War II that can inform both academic and public discourse.</p>
 </section>
 <section id="data-quality-complexity-check" class="level2">
 <h2 class="anchored" data-anchor-id="data-quality-complexity-check">Data Quality &amp; Complexity Check</h2>
-<p>Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include: - <strong>Completeness</strong>: Identifying if any critical information, such as mission dates or locations, is missing. - <strong>Consistency</strong>: Checking for uniformity in data entries, particularly in conflict names and geographic locations. - <strong>Validity</strong>: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. - <strong>Complexity</strong>: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.</p>
+<p>Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include:</p>
+<pre><code>- **Completeness**: Identifying if any critical information, such as mission dates or locations, is missing. 
+
+- **Consistency**: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
+
+- **Validity**: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. 
+
+- **Complexity**: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.</code></pre>
 </section>
 <section id="potential-data-issues" class="level2">
 <h2 class="anchored" data-anchor-id="potential-data-issues">Potential Data Issues</h2>

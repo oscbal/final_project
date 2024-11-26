@@ -2,6 +2,8 @@ bomber_data <- read.csv("data/operations.csv")
 library(skimr)
 library(tidyverse)
 library(naniar)
+install.packages("maps")
+library(maps)
 skim_without_charts(bomber_data)
 
 
@@ -25,4 +27,20 @@ outliers_count <- bomber_data %>%
 
 # Display the count of outliers for each numeric variable
 print(outliers_count)
+
+
+## Map of bombing activities ----
+bomber_data_filtered_by_long_lat <- bomber_data |>
+  mutate(Country = ifelse(is.na(Country), "Not Stated", Country)) |>
+  filter(
+    between(Target.Latitude, -90, 90) &
+    between(Target.Longitude, -180, 180)
+  ) |>
+
+world_map <- map_data("world")
+ggplot() +
+  mutate(Country = ifelse(is.na(Country), "Not Stated", Country))
+  geom_polygon(data = world_map, aes(x = long, y = lat, group = group), fill = "gray90") +
+  geom_point(data = bomber_data_filtered_by_long_lat, aes(x = Target.Longitude, y = Target.Latitude), color = Country) +
+  coord_map()
 
