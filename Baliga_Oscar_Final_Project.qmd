@@ -543,10 +543,10 @@ bomber_data_with_not_stated <- bomber_data |>
 
 
 bomber_data_with_not_stated |>
-  ggplot(aes(x = Country)) +
+  ggplot(aes(x = Country, fill = Country)) +
   geom_bar()
 ```
-To answer the earlier questions raised of the ratio of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardments were carried through by the Royal Air Force and may not have been documented due to being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK and using RAF resources.
+To answer the earlier questions raised of the ratio of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardments were carried through by the Royal Air Force and may not have been documented due to the UK being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK and using RAF resources.
 
 ### Bombardments by Country Over Time
 
@@ -560,7 +560,7 @@ bomber_data_with_not_stated <- bomber_data |>
 
 
 bomber_data_with_not_stated |>
-  ggplot(aes(y = Country)) +
+  ggplot(aes(y = Country, color = Country)) +
   geom_bar() +
   facet_wrap(~Year) +
   labs(
@@ -568,4 +568,130 @@ bomber_data_with_not_stated |>
     x ="Number"
   )
 ```
-In these graphs we can observe the number of bombardments by country. Based upon the graph, the earlier claim that the "Not Stated" bombers were predominantly British is likely incorrect. Early in the war when the UK was the only Allied Power, there were no "Not Stated" values for countries, but, when America enters the war, the number of "USA" bombardments grows at the same rate as the "Not Stated" bombardments. This correlation in rate of growth is a strong sign that many of the "Not Stated" bombardements are predominantly American, not British.
+In these graphs we can observe the number of bombardments by country. Based upon the graph, the earlier claim that the "Not Stated" bombers were predominantly British is likely incorrect. Early in the war when the UK was the only Allied Power, there were no "Not Stated" values for countries, but, when America enters the war, the number of "USA" bombardments grows at the same rate as the "Not Stated" bombardments. This correlation in rate of growth is a strong sign that many of the "Not Stated" bombardments are predominantly American, not British.
+
+
+### Differences in Bombardment for Japan And Germany
+
+##### Top 10 Targeted Industries by East vs. West
+```{r} 
+#| label: dist_25
+#| fig-cap: ""
+#| echo: FALSE
+
+European_Indus_Targets <- bomber_data |>
+  filter(Theater.of.Operations %in% c("ETO", "MTO")) |>
+  count(Target.Industry) |>
+  arrange(desc(n)) |>
+  slice(1:10) |>
+  pull(Target.Industry)
+
+kable(European_Indus_Targets)
+```
+
+```{r} 
+#| label: dist_26
+#| fig-cap: ""
+#| echo: FALSE
+
+Asian_Indus_Targets <- bomber_data |>
+  filter(Theater.of.Operations %in% c("PTO", "CBI")) |>
+  count(Target.Industry) |>
+  arrange(desc(n)) |>
+  slice(1:10) |>
+  pull(Target.Industry)
+
+kable(Asian_Indus_Targets)
+```
+
+Here we can see a stark difference in the record keeping between the Eastern and Western Theaters of combat. In the West, Industry targeting data was kept very well, even if it was a civilian target, while in the East target industry was not noted. This difference could be for various reasons, but it was likely not due to Air forces not strategically targeting different industries in the Eastern Theater because that would be a very large strategical oversight. 
+
+**More will be done in this section**
+
+### Closer Look  at Germany
+
+
+#### Germany Overall
+```{r}
+#| label: dist_27
+#| fig-cap: ""
+#| echo: FALSE
+
+germany_bombed <- bomber_data |>
+  filter(Target.Country == "GERMANY") |>
+  filter(
+    between(Target.Latitude, 45, 57) &
+    between(Target.Longitude, 0, 20)
+  )
+
+
+
+ggplot() +
+  geom_polygon(data = map_data("world", region = "Germany"), aes(x = long, y = lat, group = group), fill = "gray80") +
+  geom_point(
+    data = germany_bombed, 
+    aes(
+      x = Target.Longitude, 
+      y = Target.Latitude, 
+      shape = Country, 
+      color = Country,
+      size = Total.Weight..Tons.), 
+    alpha = 0.01) +
+  coord_map() +
+  labs(
+    title = "Allied Locations of Bombardment during WW2 in Germany",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Country",
+    size = "Tonnage of Munitions per Bombardment"
+  ) +
+  theme_light()
+```
+
+In this graph we can observe the distribution of bombing attacks across Germany. From the faint dots to the right of modern Germany, we can see areas that once were within the legal boundaries of Germany during this time but were removed post-war. We can also observe the focus on the industrial sector in the Ruhr Valley where many coal plants were located. 
+
+#### Looking at Berlin
+
+```{r}
+#| label: dist_28
+#| fig-cap: ""
+#| echo: FALSE
+berlin_bombed <- germany_bombed |>
+  filter(
+    between(Target.Latitude, 52, 53) &
+      between(Target.Longitude, 12.75, 14.25)
+  )
+
+top_7_industries <- berlin_bombed |>
+  count(Target.Industry) |>
+  arrange(desc(n)) |>
+  head(7) |>
+  pull(Target.Industry)
+
+berlin_bombed_top7 <- berlin_bombed |>
+  filter(Target.Industry %in% top_7_industries)
+
+ggplot() +
+  geom_polygon(data = map_data("world", region = "Germany"), aes(x = long, y = lat, group = group), fill = "gray80") +
+  geom_point(
+    data = berlin_bombed_top7,
+    aes(
+      x = Target.Longitude,
+      y = Target.Latitude,
+      color = Target.Industry,
+      size = Total.Weight..Tons.
+    ),
+    alpha = 0.08
+  ) +
+  coord_map(xlim = c(12.75, 14.25), ylim = c(52, 53)) + 
+  labs(
+    title = "Allied Locations of Bombardment during WW2 in Berlin",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Target Industry",
+    size = "Tonnage of Munitions per Bombardment"
+  ) +
+  theme_light()
+```
+
+From this graph we can get a closer look to the strategies used for bombardment in urban areas. In this about 100 km by 100 km box much of Germany's population, government, and industry resided. Around the city center we can see many green dot, signifying many urban targets, but can also see railroad targets, due to city centers of 20th century European cities having extensive transportation infrastructure. On the edges of the city, military targets encircle the city, a sign the defensive lines that protected the heart of Nazi Germany. Seeing the amount of bombings done in the area, show cases how dangerous life was for civilians in wartime Germany and the .
