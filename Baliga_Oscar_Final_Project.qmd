@@ -49,7 +49,9 @@ bomber_data <- read.csv("data/operations.csv")
 
 ### Data Source
 
-This dataset consists of digitized paper mission reports from World War II, developed by Lt Col Jenns Robertson of the US Air Force. The records include data from U.S. and Royal Air Force missions, as well as contributions from Australian, New Zealand, and South African air forces. The dataset captures a live-action sequence of air warfare from 1939 to 1945^[[Link to Dataset. Accessed on 11/05/24.](https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download)]
+This dataset consists of digitized paper mission reports from World War II, developed by Lt Col Jenns Robertson of the US Air Force. The records include data from U.S. and Royal Air Force missions, as well as contributions from Australian, New Zealand, and South African air forces. The dataset captures a live-action sequence of air warfare from 1939 to 1945[^1]
+
+[^1]: [Link to Dataset. Accessed on 11/05/24.](https://www.kaggle.com/datasets/usaf/world-war-ii?resource=download)
 
 ### Why This Data
 
@@ -57,9 +59,9 @@ As a double major in Data Science and History, I am fascinated by the intersecti
 
 ### Data Quality & Complexity Check
 
-Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include: 
+Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include:
 
-```
+```         
 - **Completeness**: Identifying if any critical information, such as mission dates or locations, is missing. 
 
 - **Consistency**: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
@@ -68,7 +70,6 @@ Before conducting any analysis, a quality check on the dataset will be necessary
 
 - **Complexity**: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.
 ```
-
 
 ### Potential Data Issues
 
@@ -495,6 +496,10 @@ How did allied bombing operations differ between different time periods, air for
 This map showcases the cumulative bombing damage wrought upon the Axis Powers by observing the locations bombed by various Allied air forces. The dots vary in size by the weight of bombs dropped and vary in color by which country the attack belonged to.
 
 ```{r}
+#| label: dist_22
+#| fig-cap: ""
+#| echo: FALSE
+
 bomber_data_filtered_by_long_lat <- bomber_data %>%
   mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country)) |>
   filter(
@@ -504,7 +509,7 @@ bomber_data_filtered_by_long_lat <- bomber_data %>%
 
 
   ggplot() +
-    geom_polygon(data = map_data("world"), aes(x = long, y = lat, group = group), fill = "gray70") +
+    geom_polygon(data = map_data("world"), aes(x = long, y = lat, group = group), fill = "gray80") +
     geom_point(
       data = bomber_data_filtered_by_long_lat, 
       aes(
@@ -519,8 +524,26 @@ bomber_data_filtered_by_long_lat <- bomber_data %>%
       x = "Longitude",
       y = "Latitude",
       color = "Country",
-      size = "Tonnage of Munitions per Bombardmeent"
-    )
+      size = "Tonnage of Munitions per Bombardment"
+    ) +
+    theme_light()
   
 ```
 
+Somewhat overloaded with information, this map truly portrays the magnitude of the Second World War. With dots scattered across 4 continents, the amount of resources needed to sustain just one side of the war must have been truly enormous. Looking at the Easter Theater, it's apparent that the United States played the dominate role militarily in the East. Due to MacArthur's island hopping campaign, pink dots are scattered across the Eastern Pacific as the fortified Japanese Army was gradually pried from their conquests. In the Western Theater, we can see a far greater level of international cooperation. This can partially be explained by the Royal Air Force being active in the area since 1939 (the United States only joined the war in '41) and the bombardment tactic of the Royal Air Force bombing German targets during the night and the Americans bombing Germany during the day, creating relative equilibrium. Furthermore, the greater presence of bombardments without nationalities (under "NOT STATED") in the West may support the claim of greater international cooperation in the West because the air force command structure between countries may have been so integrated they didn't deem it important to specify which group or combinations of groups took action.
+
+### Number of Bombardements by Country
+
+```{r}
+#| label: dist_23
+#| fig-cap: ""
+#| echo: FALSE
+bomber_data_with_not_stated <- bomber_data |>
+    mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country))
+
+
+bomber_data_with_not_stated |>
+  ggplot(aes(x = Country)) +
+  geom_bar()
+```
+To answer the earlier questions raised of the ration of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardements were carried through by the Royal Air Force and may not have been documented due to being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK.
