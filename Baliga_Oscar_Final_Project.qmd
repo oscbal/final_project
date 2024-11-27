@@ -546,4 +546,26 @@ bomber_data_with_not_stated |>
   ggplot(aes(x = Country)) +
   geom_bar()
 ```
-To answer the earlier questions raised of the ration of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardements were carried through by the Royal Air Force and may not have been documented due to being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK.
+To answer the earlier questions raised of the ratio of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardments were carried through by the Royal Air Force and may not have been documented due to being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK and using RAF resources.
+
+### Bombardments by Country Over Time
+
+```{r}
+#| label: dist_24
+#| fig-cap: ""
+#| echo: FALSE
+bomber_data_with_not_stated <- bomber_data |>
+    mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country),
+           Year = year(mdy(Mission.Date)))
+
+
+bomber_data_with_not_stated |>
+  ggplot(aes(y = Country)) +
+  geom_bar() +
+  facet_wrap(~Year) +
+  labs(
+    title = "Number of Bombardments by Country Over Time",
+    x ="Number"
+  )
+```
+In these graphs we can observe the number of bombardments by country. Based upon the graph, the earlier claim that the "Not Stated" bombers were predominantly British is likely incorrect. Early in the war when the UK was the only Allied Power, there were no "Not Stated" values for countries, but, when America enters the war, the number of "USA" bombardments grows at the same rate as the "Not Stated" bombardments. This correlation in rate of growth is a strong sign that many of the "Not Stated" bombardements are predominantly American, not British.
