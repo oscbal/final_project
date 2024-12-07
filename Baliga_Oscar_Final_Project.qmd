@@ -543,7 +543,7 @@ bomber_data_with_not_stated <- bomber_data |>
 
 
 bomber_data_with_not_stated |>
-  ggplot(aes(x = Country, fill = Country)) +
+  ggplot(aes(y = Country, fill = Country)) +
   geom_bar()
 ```
 To answer the earlier questions raised of the ratio of bombardments by country, this graph shows that the US is by far in the lead. Interestingly, "Not Stated" is second by a wide margin to the UK. This likely means that many of the "Not Stated" bombardments were carried through by the Royal Air Force and may not have been documented due to the UK being to only nation fighting for a period of time or the international aspects of the British Armed services from the Commonwealth or exiled governments in the UK and using RAF resources.
@@ -560,9 +560,13 @@ bomber_data_with_not_stated <- bomber_data |>
 
 
 bomber_data_with_not_stated |>
-  ggplot(aes(y = Country, color = Country)) +
+  ggplot(aes(y = Country, fill = Country)) +
   geom_bar() +
   facet_wrap(~Year) +
+  scale_x_continuous(
+    breaks = seq(0, 50000, 10000), 
+    labels = seq(0, 5, 1) 
+  ) +
   labs(
     title = "Number of Bombardments by Country Over Time",
     x ="Number"
@@ -574,6 +578,7 @@ In these graphs we can observe the number of bombardments by country. Based upon
 ### Differences in Bombardment for Japan And Germany
 
 ##### Top 10 Targeted Industries by East vs. West
+###### Western Theater
 ```{r} 
 #| label: dist_25
 #| fig-cap: ""
@@ -589,6 +594,7 @@ European_Indus_Targets <- bomber_data |>
 kable(European_Indus_Targets)
 ```
 
+###### Eastern Theater
 ```{r} 
 #| label: dist_26
 #| fig-cap: ""
@@ -632,8 +638,7 @@ ggplot() +
     data = germany_bombed, 
     aes(
       x = Target.Longitude, 
-      y = Target.Latitude, 
-      shape = Country, 
+      y = Target.Latitude,
       color = Country,
       size = Total.Weight..Tons.), 
     alpha = 0.01) +
@@ -648,7 +653,7 @@ ggplot() +
   theme_light()
 ```
 
-In this graph we can observe the distribution of bombing attacks across Germany. From the faint dots to the right of modern Germany, we can see areas that once were within the legal boundaries of Germany during this time but were removed post-war. We can also observe the focus on the industrial sector in the Ruhr Valley where many coal plants were located. 
+In this graph we can observe the distribution of bombing attacks across Germany. From the faint dots to the East of modern Germany, we can see areas that once were within the legal boundaries of Germany during this time but were removed post-war. We can also observe the focus on the industrial sector in the Ruhr Valley where many coal plants were located. 
 
 #### Looking at Berlin
 
@@ -694,4 +699,36 @@ ggplot() +
   theme_light()
 ```
 
-From this graph we can get a closer look to the strategies used for bombardment in urban areas. In this about 100 km by 100 km box much of Germany's population, government, and industry resided. Around the city center we can see many green dot, signifying many urban targets, but can also see railroad targets, due to city centers of 20th century European cities having extensive transportation infrastructure. On the edges of the city, military targets encircle the city, a sign the defensive lines that protected the heart of Nazi Germany. Seeing the amount of bombings done in the area, show cases how dangerous life was for civilians in wartime Germany and the .
+From this graph we can get a closer look to the strategies used for bombardment in urban areas. In this about 100 km by 100 km box much of Germany's population, government, and industry resided. Around the city center we can see many green dot, signifying many urban targets, but can also see railroad targets, due to city centers of 20th century European cities having extensive transportation infrastructure. On the edges of the city, military targets encircle the city, a sign the defensive lines that protected the heart of Nazi Germany. Seeing the amount of bombings done in the area, show cases how dangerous life was for civilians in wartime Germany and the pressures put upon the German government to sustain infrastructure through these difficult times.
+
+### Closer look at Japan
+```{r}
+japan_bombed <- bomber_data |>
+  filter(Target.Country == "JAPAN") |>
+  filter(
+    between(Target.Latitude, 20, 45) &
+    between(Target.Longitude, 122, 153)
+  )
+
+
+
+ggplot() +
+  geom_polygon(data = map_data("world", region = "Japan"), aes(x = long, y = lat, group = group), fill = "gray80") +
+  geom_point(
+    data = japan_bombed, 
+    aes(
+      x = Target.Longitude, 
+      y = Target.Latitude,
+      color = Incendiary.Devices,
+      size = Total.Weight..Tons.), 
+    alpha = 0.01) +
+  coord_map() +
+  labs(
+    title = "Allied Locations of Bombardment during WW2 in Japan",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Country",
+    size = "Tonnage of Munitions per Bombardment"
+  ) +
+  theme_light()
+```
