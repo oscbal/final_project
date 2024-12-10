@@ -1,5 +1,5 @@
 ---
-title: "Progress Memo 1"
+title: "Final Project: WW2 Bombing Study"
 subtitle: |
   | Final Project 
   | Data Science 1 with R (STAT 301-1)
@@ -96,24 +96,21 @@ Altitude (Hundreds of Feet): Complete rate of 0.322 (67.8% missing).
 -   **Data Entry Errors**: There might be inconsistencies in how missions and conflicts are labeled or recorded, leading to difficulties in categorization and analysis. Especially with datasets from the 1940s, it must be taken into consideration that decades of clerical errors may have altered the data.
 
 -   **Outliers**: There are many outliers for most numerical variables in the dataset:
-
-    Takeoff Longitude: 429 outliers
-
+skim_wihtoutcharts
 ```{r}
-#| label: dist_1
+#| label: dist_0
 #| fig-cap: ""
 #| echo: FALSE
 #| code-fold: true
 
-bomber_data |>
-  ggplot(aes(x = Takeoff.Longitude)) +
-  geom_boxplot() +
-  labs(
-    x = "Takeoff Longitude",
-    title = "Distribution of Takeoff Longitudes for Allied Bombers in WW2"
-  ) +
-  theme_light()
+date_overview <- bomber_data |>
+  skimr::skim_without_charts()
+
+kable(date_overview)
 ```
+
+
+    Takeoff Longitude: 429 outliers
 
 ```         
 Target Latitude: 145 outliers
@@ -122,361 +119,77 @@ Target Latitude: 145 outliers
 Target Longitude: 127 outliers
 ```
 
-```{r}
-#| label: dist_3
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Target.Longitude)) +
-  geom_boxplot() +
-  labs(
-    x = "Target Latitude",
-    title = "Distribution of Target Latitude for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Altitude Hundreds of Feet: 29
-```
-
-```{r}
-#| label: dist_4
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Target.Latitude)) +
-  geom_boxplot() +
-  labs(
-    x = "Target Latitude",
-    title = "Distribution of Target Latitude for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Airborne Aircraft: 1823
 ```
 
-```{r}
-#| label: dist_5
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Airborne.Aircraft)) +
-  geom_boxplot() +
-  labs(
-    x = "Airborne Aircraft",
-    title = "Distribution of Airborne Aircraft for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Attacking Aircraft: 9601
-```
-
-```{r}
-#| label: dist_6
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Takeoff.Longitude)) +
-  geom_boxplot() +
-  labs(
-    x = "Takeoff Longitude",
-    title = "Distribution of Takeoff Longitudes for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Bombing Aircraft: 1417
 ```
 
-```{r}
-#| label: dist_7
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Bombing.Aircraft)) +
-  geom_boxplot() +
-  labs(
-    x = "Bombing Aircraft",
-    title = "Distribution of Bombing.Aircraft for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
 
 ```         
 Aircraft Returned: 2
-```
-
-```{r}
-#| label: dist_8
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Aircraft.Returned)) +
-  geom_boxplot() +
-  labs(
-    x = "Aircraft Returned",
-    title = "Distribution of Aircraft Returned for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Aircraft Failed: 32
 ```
 
-```{r}
-#| label: dist_9
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Aircraft.Failed)) +
-  geom_boxplot() +
-  labs(
-    x = "Aircraft Failed",
-    title = "Distribution of Aircraft Failed for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Aircraft Damaged: 2
-```
-
-```{r}
-#| label: dist_10
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Aircraft.Damaged)) +
-  geom_boxplot() +
-  labs(
-    x = "Aircraft Damaged",
-    title = "Distribution of Aircraft Damaged for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Aircraft Lost: 18
 ```
 
-```{r}
-#| label: dist_11
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Aircraft.Lost)) +
-  geom_boxplot() +
-  labs(
-    x = "Aircraft Lost",
-    title = "Distribution of Aircraft Lost for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 High Explosives: 3537
-```
-
-```{r}
-#| label: dist_12
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = High.Explosives)) +
-  geom_boxplot() +
-  labs(
-    x = "High Explosives",
-    title = "Distribution of High Explosives for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 High Explosives Weight Tons: 7568
 ```
 
-```{r}
-#| label: dist_13
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = High.Explosives.Weight..Tons.)) +
-  geom_boxplot() +
-  labs(
-    x = "High Explosives in Weight of Tons",
-    title = "Distribution of High Explosives in Weight of Tons for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Incendiary Devices: 515
-```
-
-```{r}
-#| label: dist_14
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Incendiary.Devices)) +
-  geom_boxplot() +
-  labs(
-    x = "Incendiary Devices",
-    title = "Distribution of Incendiary Devices for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Incendiary Devices Weight Pounds: 69
 ```
 
-```{r}
-#| label: dist_15
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Incendiary.Devices.Weight..Pounds.)) +
-  geom_boxplot() +
-  labs(
-    x = "Incendiary Devices in Weight of Pounds",
-    title = "Distribution of Incendiary Devices in Weight of Pounds for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Incendiary Devices Weight Tons: 2081
-```
-
-```{r}
-#| label: dist_16
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Incendiary.Devices.Weight..Tons.)) +
-  geom_boxplot() +
-  labs(
-    x = "Incendiary Devices in Weight of Tons",
-    title = "Distribution of Incendiary Devices in Weight of Tons for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Fragmentation Devices: 457
 ```
 
-```{r}
-#| label: dist_17
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Fragmentation.Devices)) +
-  geom_boxplot() +
-  labs(
-    x = "Fragmentation Devices",
-    title = "Distribution of Fragmentation Devices for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Fragmentation Devices Weight Pounds: 14
-```
-
-```{r}
-#| label: dist_18
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Fragmentation.Devices.Weight..Pounds.)) +
-  geom_boxplot() +
-  labs(
-    x = "Fragmentation Devices in Weight of Pounds",
-    title = "Distribution of Fragmentation Devices in Weight of Pounds for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 ```         
 Fragmentation Devices Weight Tons: 2284
 ```
 
-```{r}
-#| label: dist_19
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Fragmentation.Devices.Weight..Tons.)) +
-  geom_boxplot() +
-  labs(
-    x = "Fragmentation Devices in Weight of Tons",
-    title = "Distribution of Fragmentation Devices in Weight of Tons for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Total Weight Pounds: 136
 ```
 
-```{r}
-#| label: dist_20
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Total.Weight..Pounds.)) +
-  geom_boxplot() +
-  labs(
-    x = "Total Weight in Pounds",
-    title = "Distribution of Total Weight in Pounds for Allied Bombers in WW2"
-  ) +
-  theme_light()
-```
-
 ```         
 Total Weight Tons: 9363
-```
-
-```{r}
-#| label: dist_21
-#| fig-cap: ""
-#| echo: FALSE
-
-bomber_data |>
-  ggplot(aes(x = Total.Weight..Tons.)) +
-  geom_boxplot() +
-  labs(
-    x = "Total Weight in Tons",
-    title = "Distribution of Total Weight in Tons for Allied Bombers in WW2"
-  ) +
-  theme_light()
 ```
 
 -   **Bias in Data Collection**: The dataset may reflect biases based on the documentation practices of the time or the focus on certain operations over others. Furthermore, many record of this age may have been lost/damaged during combat or during the period between the end of WW2 and digitization of the dataset.
@@ -500,7 +213,7 @@ This map showcases the cumulative bombing damage wrought upon the Axis Powers by
 #| fig-cap: ""
 #| echo: FALSE
 
-bomber_data_filtered_by_long_lat <- bomber_data %>%
+bomber_data_filtered_by_long_lat <- bomber_data |>
   mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country)) |>
   filter(
     between(Target.Latitude, -90, 90) &
@@ -520,13 +233,23 @@ bomber_data_filtered_by_long_lat <- bomber_data %>%
       alpha = 0.01) +
     coord_map() +
     labs(
-      title = "All Allied Locations of Bombardment during WW2",
+      title = " All Allied Locations of Bombardment \n during WW2",
       x = "Longitude",
       y = "Latitude",
       color = "Country",
-      size = "Tonnage of Munitions per Bombardment"
+      size = "Tonnage of Munitions \nper Bombardment"
     ) +
-    theme_light()
+    theme_light() +
+  theme(
+    legend.position = "right",
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.key.size = unit(.3, "cm")
+  ) +
+    guides(
+    color = guide_legend(override.aes = list(alpha = 1)),
+    size = guide_legend(override.aes = list(alpha = 1))
+  )
   
 ```
 
@@ -569,11 +292,39 @@ bomber_data_with_not_stated |>
   ) +
   labs(
     title = "Number of Bombardments by Country Over Time",
-    x ="Number"
+    x ="Count in 10,000s"
   )
 ```
 In these graphs we can observe the number of bombardments by country. Based upon the graph, the earlier claim that the "Not Stated" bombers were predominantly British is likely incorrect. Early in the war when the UK was the only Allied Power, there were no "Not Stated" values for countries, but, when America enters the war, the number of "USA" bombardments grows at the same rate as the "Not Stated" bombardments. This correlation in rate of growth is a strong sign that many of the "Not Stated" bombardments are predominantly American, not British.
 
+### Aircraft Used By Year
+```{r}
+top_aircraft_types <- bomber_data %>%
+  mutate(
+    Mission.Date = mdy(Mission.Date),  
+    year = year(Mission.Date)       
+  ) %>%
+  group_by(year, Aircraft.Series) %>% 
+  summarize(n = n(), .groups = "drop") %>% 
+  group_by(year) %>% 
+  slice_max(n, n = 7) %>% 
+  ungroup()
+  
+
+ggplot(top_aircraft_types, aes(x = reorder(Aircraft.Series, n), y = n, fill = as.factor(year))) +
+  geom_col() +
+  coord_flip() +  # Flip coordinates for better readability
+  facet_wrap(~ year, scales = "free_y") +  # Create facets for each year
+  labs(
+    title = "Top 10 Aircraft Types Used in Missions by Year",
+    x = "Aircraft Type",
+    y = "Number of Missions",
+    fill = "Year"
+  ) +
+  theme_minimal()
+  
+```
+This chart shows how aircraft technology and usage evolved throughout World War II. Early in the war (1939-1941), British planes like the Wellington ("WELL") and Hampden ("HAMP") were heavily used, reflecting Britain’s early involvement and reliance on bombers like the Blenheim ("BLEN") for operations in Europe. By 1942, American aircraft such as the B-17 Flying Fortress and B-24 Liberator started to dominate, showing the U.S.'s growing role in the war and their focus on building heavy bombers with greater range and payload capacity. From 1943 onward, planes like the B-17, B-24, and the B-26 Marauder became essential, with advanced models like the P-51 Mustang appearing by 1945 for escort and bombing missions. This shift highlights how Allied aircraft became more advanced and versatile as the war progressed.
 
 ### Differences in Bombardment for Japan And Germany
 
@@ -625,6 +376,7 @@ Here we can see a stark difference in the record keeping between the Eastern and
 
 germany_bombed <- bomber_data |>
   filter(Target.Country == "GERMANY") |>
+  mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country)) |>
   filter(
     between(Target.Latitude, 45, 57) &
     between(Target.Longitude, 0, 20)
@@ -648,9 +400,19 @@ ggplot() +
     x = "Longitude",
     y = "Latitude",
     color = "Country",
-    size = "Tonnage of Munitions per Bombardment"
+    size = "Tonnage of Munitions \nper Bombardment"
   ) +
-  theme_light()
+  theme_light()  +
+  theme(
+    legend.position = "right",
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.key.size = unit(.3, "cm")
+  ) +
+    guides(
+    color = guide_legend(override.aes = list(alpha = 1)),
+    size = guide_legend(override.aes = list(alpha = 1))
+  )
 ```
 
 In this graph we can observe the distribution of bombing attacks across Germany. From the faint dots to the East of modern Germany, we can see areas that once were within the legal boundaries of Germany during this time but were removed post-war. We can also observe the focus on the industrial sector in the Ruhr Valley where many coal plants were located. 
@@ -667,14 +429,14 @@ berlin_bombed <- germany_bombed |>
       between(Target.Longitude, 12.75, 14.25)
   )
 
-top_7_industries <- berlin_bombed |>
+top_3_industries <- berlin_bombed |>
   count(Target.Industry) |>
   arrange(desc(n)) |>
-  head(7) |>
+  head(3) |>
   pull(Target.Industry)
 
 berlin_bombed_top7 <- berlin_bombed |>
-  filter(Target.Industry %in% top_7_industries)
+  filter(Target.Industry %in% top_3_industries)
 
 ggplot() +
   geom_polygon(data = map_data("world", region = "Germany"), aes(x = long, y = lat, group = group), fill = "gray80") +
@@ -690,27 +452,35 @@ ggplot() +
   ) +
   coord_map(xlim = c(12.75, 14.25), ylim = c(52, 53)) + 
   labs(
-    title = "Allied Locations of Bombardment during WW2 in Berlin",
+    title = "Allied Locations of Bombardment \nduring WW2 in Berlin",
     x = "Longitude",
     y = "Latitude",
     color = "Target Industry",
     size = "Tonnage of Munitions per Bombardment"
   ) +
-  theme_light()
+  theme_light()  +
+    guides(
+    color = guide_legend(override.aes = list(alpha = 1)),
+    size = guide_legend(override.aes = list(alpha = 1))
+  )
 ```
 
 From this graph we can get a closer look to the strategies used for bombardment in urban areas. In this about 100 km by 100 km box much of Germany's population, government, and industry resided. Around the city center we can see many green dot, signifying many urban targets, but can also see railroad targets, due to city centers of 20th century European cities having extensive transportation infrastructure. On the edges of the city, military targets encircle the city, a sign the defensive lines that protected the heart of Nazi Germany. Seeing the amount of bombings done in the area, show cases how dangerous life was for civilians in wartime Germany and the pressures put upon the German government to sustain infrastructure through these difficult times.
 
+
 ### Closer look at Japan
+
+#### Japan Overall
 ```{r}
+#| label: dist_29
+#| fig-cap: ""
+#| echo: FALSE
 japan_bombed <- bomber_data |>
   filter(Target.Country == "JAPAN") |>
   filter(
     between(Target.Latitude, 20, 45) &
     between(Target.Longitude, 122, 153)
   )
-
-
 
 ggplot() +
   geom_polygon(data = map_data("world", region = "Japan"), aes(x = long, y = lat, group = group), fill = "gray80") +
@@ -719,16 +489,48 @@ ggplot() +
     aes(
       x = Target.Longitude, 
       y = Target.Latitude,
-      color = Incendiary.Devices,
-      size = Total.Weight..Tons.), 
+      color = Total.Weight..Tons.), 
     alpha = 0.01) +
   coord_map() +
   labs(
     title = "Allied Locations of Bombardment during WW2 in Japan",
     x = "Longitude",
     y = "Latitude",
-    color = "Country",
-    size = "Tonnage of Munitions per Bombardment"
+    color = "Weight in tons",
+  ) +
+  scale_color_gradient(
+    low = "blue", 
+    high = "darkblue", 
+    na.value = "gray50"  # Handle missing values, if any
   ) +
   theme_light()
 ```
+From this map we can observe the key locations bombed in Japan. As much of the country is mountainous, industry and civilian targets lie closer to the coast. Furthermore, the two largest cities, Tokyo and Osaka, are clearly visible. Furthermore, Japan's southern island, Kyushu, was heavily targeted with incendiary bombs, as seen by the grouping of dots. Japan's Eastern coast appears to be far less scathed which may be due to the lower population in these areas and the difficulties of traversing the mountains in the center of the islands.
+
+#### Bombs falling on Japan over time
+```{r}
+#| label: dist_30
+#| fig-cap: ""
+#| echo: FALSE
+japan_bombed_summary <- japan_bombed |>
+  mutate(
+    Mission.Date = mdy(Mission.Date),           # Convert to Date format
+    Month_Year = floor_date(Mission.Date, "month") # Round down to first day of the month
+  ) |>
+  group_by(Month_Year) |>
+  summarise(Total_Tons_Dropped = sum(Total.Weight..Tons., na.rm = TRUE)) # Sum tons dropped
+
+# Plot the aggregated data
+ggplot(japan_bombed_summary, aes(x = Month_Year, y = Total_Tons_Dropped)) +
+  geom_col(fill = "blue") +  # Use geom_col() for summed data
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  labs(
+    title = "Bombing in Japan by Month and Year",
+    x = "Month and Year",
+    y = "Total Tons of Bombs Dropped"
+  ) +
+  theme_light()
+
+
+```
+This graph shows the tonnage of bombs dropped on Japan during World War II, with a sharp increase in 1944 and 1945 reflecting the U.S.'s intensifying bombing campaigns. The early years, including the 1942 Doolittle Raid, are not prominent on the graph due to the limited scale of these operations; the raid's significance was psychological rather than destructive. The turning point came with the capture of key islands like Saipan and Tinian in 1944, enabling B-29 bombers to reach Japan. By 1945, sustained air raids, including the devastating firebombing of Tokyo, marked the peak of the campaign. This escalation was critical in forcing Japan's surrender and demonstrates the importance of geographic and logistical advances in the Pacific theater.
