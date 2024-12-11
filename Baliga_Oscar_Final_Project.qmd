@@ -62,13 +62,13 @@ As a double major in Data Science and History, I am fascinated by the intersecti
 Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include:
 
 ```         
-- **Completeness**: Identifying if any critical information, such as mission dates or locations, is missing. 
+- Completeness: Identifying if any critical information, such as mission dates or locations, is missing. 
 
-- **Consistency**: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
+- Consistency: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
 
-- **Validity**: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. 
+- Validity: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. 
 
-- **Complexity**: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.
+- Complexity: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.
 ```
 
 ### Potential Data Issues
@@ -104,6 +104,7 @@ skim_wihtoutcharts
 #| code-fold: true
 
 date_overview <- bomber_data |>
+  mutate(across(where(is.character), ~ na_if(., ""))) |>
   skimr::skim_without_charts()
 
 kable(date_overview)
@@ -255,6 +256,61 @@ bomber_data_filtered_by_long_lat <- bomber_data |>
 
 Somewhat overloaded with information, this map truly portrays the magnitude of the Second World War. With dots scattered across 4 continents, the amount of resources needed to sustain just one side of the war must have been truly enormous. Looking at the Easter Theater, it's apparent that the United States played the dominate role militarily in the East. Due to MacArthur's island hopping campaign, pink dots are scattered across the Eastern Pacific as the fortified Japanese Army was gradually pried from their conquests. In the Western Theater, we can see a far greater level of international cooperation. This can partially be explained by the Royal Air Force being active in the area since 1939 (the United States only joined the war in '41) and the bombardment tactic of the Royal Air Force bombing German targets during the night and the Americans bombing Germany during the day, creating relative equilibrium. Furthermore, the greater presence of bombardments without nationalities (under "NOT STATED") in the West may support the claim of greater international cooperation in the West because the air force command structure between countries may have been so integrated they didn't deem it important to specify which group or combinations of groups took action.
 
+
+### All Locations of departure for Allied Aircaft
+
+```{r}
+#| label: dist_22.5
+#| fig-cap: ""
+#| echo: FALSE
+
+bomber_data_filtered_by_long_lat <- bomber_data |>
+  mutate(Country = ifelse(is.na(Country) | Country == "", "NOT STATED", Country)) |>
+   mutate(
+    Takeoff.Latitude = as.numeric(Takeoff.Latitude),
+    Takeoff.Longitude = as.numeric(Takeoff.Longitude)
+  ) |>
+  filter(
+  !is.na(Takeoff.Latitude) & !is.na(Takeoff.Longitude) &
+  between(Takeoff.Latitude, -90, 90) &
+  between(Takeoff.Longitude, -180, 180)
+  )
+
+
+  ggplot() +
+    geom_polygon(data = map_data("world"), aes(x = long, y = lat, group = group), fill = "gray80") +
+    geom_point(
+      data = bomber_data_filtered_by_long_lat, 
+      aes(
+        x = Takeoff.Longitude, 
+        y = Takeoff.Latitude, 
+        color = Country, 
+        size = Total.Weight..Tons.), 
+      alpha = 0.01) +
+    coord_map() +
+    labs(
+      title = " All Allied Locations of takeoff \n during WW2",
+      x = "Longitude",
+      y = "Latitude",
+      color = "Country",
+      size = "Tonnage of Munitions \nper Bombardment"
+    ) +
+    theme_light() +
+  theme(
+    legend.position = "right",
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.key.size = unit(.3, "cm")
+  ) +
+    guides(
+    color = guide_legend(override.aes = list(alpha = 1)),
+    size = guide_legend(override.aes = list(alpha = 1))
+  )
+  
+```
+
+This graph shows where Allied bombers took off during WW2, broken down by country and the tonnage of munitions. The missingness rate is extremely high, which makes it hard to take the data at face value. That said, the points that are included probably line up with areas where the battle lines were really fluid, like North Africa or Southeast Asia, so they were more likely to be recorded. Places like England, which were more stable but integral for bombing Germany and Western Europe, might not show up here because of how the data was collected. The bases near the frontlines or major targets probably got more attention in the records since they were so important for operations. Bottom line: this shows some interesting patterns, but the missing data makes it tricky to draw any solid conclusions.
+
 ### Number of Bombardements by Country
 
 ```{r}
@@ -299,6 +355,10 @@ In these graphs we can observe the number of bombardments by country. Based upon
 
 ### Aircraft Used By Year
 ```{r}
+#| label: dist_24.5
+#| fig-cap: ""
+#| echo: FALSE
+
 top_aircraft_types <- bomber_data %>%
   mutate(
     Mission.Date = mdy(Mission.Date),  
