@@ -59,44 +59,7 @@ As a double major in Data Science and History, I am fascinated by the intersecti
 
 ### Data Quality & Complexity Check
 
-Before conducting any analysis, a quality check on the dataset will be necessary. Key aspects include:
-
-```         
-- Completeness: Identifying if any critical information, such as mission dates or locations, is missing. 
-
-- Consistency: Checking for uniformity in data entries, particularly in conflict names and geographic locations. 
-
-- Validity: Ensuring that the recorded dates and mission outcomes conform to expected formats and categories. 
-
-- Complexity: The dataset includes various data elements that may require careful handling to ensure accurate analysis, especially when merging with other datasets or conducting time series analyses.
-```
-
-### Potential Data Issues
-
-Several potential issues may affect the usability of this dataset:
-
-\-**Missing Values:** Some records lack details. All character values have a 100% complete rate, but the numeric data possess issues with completeness:
-
-```         
-Source ID: Complete rate of 0.023 (97.7% missing).
-
-Target Latitude: Complete rate of 0.049 (95.1% missing).
-
-Target Longitude: Complete rate of 0.049 (95.1% missing).
-
-Total Weight (Tons): Complete rate of 0.066 (93.4% missing).
-
-High Explosives Weight (Tons): Complete rate of 0.18 (82% missing).
-
-Attacking Aircraft: Complete rate of 0.298 (70.2% missing).
-
-Altitude (Hundreds of Feet): Complete rate of 0.322 (67.8% missing).
-```
-
--   **Data Entry Errors**: There might be inconsistencies in how missions and conflicts are labeled or recorded, leading to difficulties in categorization and analysis. Especially with datasets from the 1940s, it must be taken into consideration that decades of clerical errors may have altered the data.
-
--   **Outliers**: There are many outliers for most numerical variables in the dataset:
-skim_wihtoutcharts
+#### Data Overview:
 ```{r}
 #| label: dist_0
 #| fig-cap: ""
@@ -110,13 +73,19 @@ date_overview <- bomber_data |>
 kable(date_overview)
 ```
 
+Much of the data has serious issues with non completeness. The most important variables, Target.Longitude and Target.Latitude, are nearly all complete, but for investigations into more minute details of bombing operations issues will be experienced with a lack of complete data. This missingness may occur due to biases in the data, such as differences in record keeping between air forces and theaters of combat, which mean conclusions drawn from them might pose an incorrect image of what is truly occurring. Overall with all of the variables, there is a lot of valuable information to parse through whcih will give interesting and sizable takeaways about the Allied air effort in World War 2.
 
+-   **Outliers**: There are many outliers for most numerical variables in the dataset:
+
+```
     Takeoff Longitude: 429 outliers
+```
 
 ```         
 Target Latitude: 145 outliers
+```
 
-
+```
 Target Longitude: 127 outliers
 ```
 
@@ -135,7 +104,6 @@ Attacking Aircraft: 9601
 ```         
 Bombing Aircraft: 1417
 ```
-
 
 ```         
 Aircraft Returned: 2
@@ -457,9 +425,7 @@ violin_bombing |>
 The plot shows clear differences in "time over target," with the USA’s consistent times suggesting efficient, standardized daytime raids. The use of the Norden bombsight likely played a role here, allowing for more precise targeting and shorter times spent in hostile airspace. Great Britain’s wider variability reflects the complexity of their nighttime area bombing campaigns, which required more time for navigation and target identification in the dark. These missions often aimed to disrupt entire cities rather than precision targets, leading to longer and less predictable times over the target. Australia’s shorter times suggest their focus on island bombing campaigns in the Pacific, where missions were geographically constrained and often targeted specific installations. These differences show how each nation’s tactics were shaped by the unique 
 demands of their theaters, whether it was precision daytime strikes, complex nighttime raids, or focused island-hopping campaigns.
 
-### Differences in Bombardment for Japan And Germany
-
-##### Top 10 Targeted Industries by East vs. West
+### Top 10 Targeted Industries by East vs. West Theaters 
 ###### Western Theater:
 ```{r} 
 #| label: dist_25
@@ -502,7 +468,6 @@ kable(Asian_Indus_Targets)
 
 Here we can see a stark difference in the record keeping between the Eastern and Western Theaters of combat. In the West, Industry targeting data was kept very well, even if it was a civilian target, while in the East target industry was not noted. This difference could be for various reasons, but it was likely not due to Air forces not strategically targeting different industries in the Eastern Theater because that would be a very large strategical oversight. 
 
-**More will be done in this section**
 
 ### Closer Look  at Germany
 
