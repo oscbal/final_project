@@ -203,7 +203,7 @@ The dataset offers a unique opportunity to understand the operational history of
 
 ### Guiding Question:
 
-How did allied bombing operations differ between different time periods, air forces, theaters, and tactical strategies.
+How did allied bombing operations differ between different time periods, air forces, theaters, and tactical strategies?
 
 ### Overarall Distribution of Bombing activities during the War
 
@@ -359,15 +359,15 @@ In these graphs we can observe the number of bombardments by country. Based upon
 #| fig-cap: ""
 #| echo: FALSE
 
-top_aircraft_types <- bomber_data %>%
+top_aircraft_types <- bomber_data |>
   mutate(
     Mission.Date = mdy(Mission.Date),  
     year = year(Mission.Date)       
-  ) %>%
-  group_by(year, Aircraft.Series) %>% 
-  summarize(n = n(), .groups = "drop") %>% 
-  group_by(year) %>% 
-  slice_max(n, n = 7) %>% 
+  ) |>
+  group_by(year, Aircraft.Series) |> 
+  summarize(n = n(), .groups = "drop") |> 
+  group_by(year) |> 
+  slice_max(n, n = 7) |> 
   ungroup()
   
 
@@ -386,10 +386,81 @@ ggplot(top_aircraft_types, aes(x = reorder(Aircraft.Series, n), y = n, fill = as
 ```
 This chart shows how aircraft technology and usage evolved throughout World War II. Early in the war (1939-1941), British planes like the Wellington ("WELL") and Hampden ("HAMP") were heavily used, reflecting Britain’s early involvement and reliance on bombers like the Blenheim ("BLEN") for operations in Europe. By 1942, American aircraft such as the B-17 Flying Fortress and B-24 Liberator started to dominate, showing the U.S.'s growing role in the war and their focus on building heavy bombers with greater range and payload capacity. From 1943 onward, planes like the B-17, B-24, and the B-26 Marauder became essential, with advanced models like the P-51 Mustang appearing by 1945 for escort and bombing missions. This shift highlights how Allied aircraft became more advanced and versatile as the war progressed.
 
+### Aircraft Losses
+
+```{r}
+#| label: dist_24.6
+#| fig-cap: ""
+#| echo: FALSE
+
+monthly_bomb_data <- bomber_data |>
+  mutate(
+    Mission.Date = mdy(Mission.Date),        
+    Month_Year = floor_date(Mission.Date, "month") 
+  ) |>
+  group_by(Month_Year) |>
+  summarise(
+    Total_Planes = sum(Airborne.Aircraft, na.rm = TRUE), 
+    Aircraft_Lost = sum(Aircraft.Lost, na.rm = TRUE) 
+  )
+
+ggplot(monthly_bomb_data, aes(x = Month_Year, y = Aircraft_Lost / Total_Planes)) +
+  geom_col(fill = "blue", alpha = 0.7) + 
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  labs(
+    title = "Proportion of Aircraft Losses Throughout the War",
+    x = "Month",
+    y = "Proportion of Aircraft Lost"
+  )
+```
+Here we can see an extremely cutoff from high loss percentages early in the war to a comparatively low stabilization later in the war. This can partially be explained by inaccuracies in the data set. Because it was early in the war, strict data keeping methods may not have been in place. On the other hand, aircraft losses were extremely high early in the war. The German air force, the Luftwaffe, was far superior to the Allied air forces, and they used this superiority to inflict heavy losses. During the German Blitzkrieg of Poland, almost the entire Polish Air Force was decimated. This could explain the high proportion of aircraft lost seen in the Fall of '39. The next peak at May '40 is likely the German lightning attack upon Northern France. The RAF was pushed to its limits in the following months in the desperate fight to save France and the Battle of Britain. The spike in May '42 aligns with the dates of the Battle of Midway where intense combat took place over the island and the many aircraft carriers. Famously, Torpedo Squadron 8 (VT-8) lost 45 of its 48 men during the Battle of Midway which it just an example of the high casualties of the time.
+
+### Most Popular Callsigns
+
+```{r}
+#| label: dist_24.7
+#| fig-cap: "Names:"
+#| echo: FALSE
+
+Facorite_Callsigns <- bomber_data |>
+  count(Callsign) |>
+  arrange(desc(n)) |>
+  slice(1:10) |>
+  pull(Callsign)
+
+kable(Facorite_Callsigns)
+```
+
+This list of callsigns, like Doolittle, Greening, and Hilger, points to some of the most important figures and missions from WWII, like the Doolittle Raid on Japan. With a completion rate of just 0.0001178, it’s clear the dataset only captured the most famous callsigns tied to big operations, leaving out most of the missions and people involved.
+
+### Time Over Target Investigation
+
+```{r}
+#| label: dist_24.8
+#| fig-cap: ""
+#| echo: FALSE
+
+violin_bombing <- bomber_data |> 
+  filter(Country %in% c('USA', 'GREAT BRITAIN', 'AUSTRALIA'))
+
+violin_bombing |>
+  ggplot(aes(x = as.numeric(Time.Over.Target), y = Country)) +
+  geom_violin(fill = "darkgreen", color = "black", alpha = .6) +
+  geom_boxplot(fill = "grey50", alpha = .6) +
+  labs(
+    title = "Distribution of Attacking Aircraft over Targets",
+    x = "Time Over Target (in seconds)",
+    y = "Country"
+  )
+```
+
+The plot shows clear differences in "time over target," with the USA’s consistent times suggesting efficient, standardized daytime raids. The use of the Norden bombsight likely played a role here, allowing for more precise targeting and shorter times spent in hostile airspace. Great Britain’s wider variability reflects the complexity of their nighttime area bombing campaigns, which required more time for navigation and target identification in the dark. These missions often aimed to disrupt entire cities rather than precision targets, leading to longer and less predictable times over the target. Australia’s shorter times suggest their focus on island bombing campaigns in the Pacific, where missions were geographically constrained and often targeted specific installations. These differences show how each nation’s tactics were shaped by the unique 
+demands of their theaters, whether it was precision daytime strikes, complex nighttime raids, or focused island-hopping campaigns.
+
 ### Differences in Bombardment for Japan And Germany
 
 ##### Top 10 Targeted Industries by East vs. West
-###### Western Theater
+###### Western Theater:
 ```{r} 
 #| label: dist_25
 #| fig-cap: ""
@@ -402,10 +473,18 @@ European_Indus_Targets <- bomber_data |>
   slice(1:10) |>
   pull(Target.Industry)
 
+
+European_Indus_Targets <- bomber_data |>
+  count(Target.Industry) |>
+  arrange(desc(n)) |>
+  slice(1:10) |>
+  pull(Target.Industry)
 kable(European_Indus_Targets)
 ```
 
-###### Eastern Theater
+
+
+###### Eastern Theater:
 ```{r} 
 #| label: dist_26
 #| fig-cap: ""
@@ -561,7 +640,7 @@ ggplot() +
   scale_color_gradient(
     low = "blue", 
     high = "darkblue", 
-    na.value = "gray50"  # Handle missing values, if any
+    na.value = "gray50"  
   ) +
   theme_light()
 ```
@@ -574,15 +653,15 @@ From this map we can observe the key locations bombed in Japan. As much of the c
 #| echo: FALSE
 japan_bombed_summary <- japan_bombed |>
   mutate(
-    Mission.Date = mdy(Mission.Date),           # Convert to Date format
-    Month_Year = floor_date(Mission.Date, "month") # Round down to first day of the month
+    Mission.Date = mdy(Mission.Date),        
+    Month_Year = floor_date(Mission.Date, "month") 
   ) |>
   group_by(Month_Year) |>
-  summarise(Total_Tons_Dropped = sum(Total.Weight..Tons., na.rm = TRUE)) # Sum tons dropped
+  summarise(Total_Tons_Dropped = sum(Total.Weight..Tons., na.rm = TRUE)) 
 
-# Plot the aggregated data
+
 ggplot(japan_bombed_summary, aes(x = Month_Year, y = Total_Tons_Dropped)) +
-  geom_col(fill = "blue") +  # Use geom_col() for summed data
+  geom_col(fill = "blue") + 
   scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
   labs(
     title = "Bombing in Japan by Month and Year",
@@ -594,3 +673,23 @@ ggplot(japan_bombed_summary, aes(x = Month_Year, y = Total_Tons_Dropped)) +
 
 ```
 This graph shows the tonnage of bombs dropped on Japan during World War II, with a sharp increase in 1944 and 1945 reflecting the U.S.'s intensifying bombing campaigns. The early years, including the 1942 Doolittle Raid, are not prominent on the graph due to the limited scale of these operations; the raid's significance was psychological rather than destructive. The turning point came with the capture of key islands like Saipan and Tinian in 1944, enabling B-29 bombers to reach Japan. By 1945, sustained air raids, including the devastating firebombing of Tokyo, marked the peak of the campaign. This escalation was critical in forcing Japan's surrender and demonstrates the importance of geographic and logistical advances in the Pacific theater.
+
+
+
+## Conclusion 
+
+From these graphs, maps, and tables we can take away various conclusions about the Allied bombing campaign upon the Axis Powers. Temporally, we can observe a large transition from Allied weakness to dominance. From the proportion of planes lost, we see extremely high proportions at the start of the war, but it decreases as time goes on. Part of the transition can be explained by the entrance of the United States into the war. As an the most industrialized country at that time, aircraft production skyrocketed. We can see this in the increase in aircraft missions over time and the change in the most popular aircraft. 
+
+One key missing aspect of the dataset is detailed data for the Eastern Theater. For attacks upon Japan, must less information was kept on industry targets and more. This is likely an issue with the dataset and not the actual strategic policy of the time. Looking at the map of Bombed locations on Japan, many coorelated with key urban and industrial areas. 
+
+Interesting aspect brought up during the inquiry were the most popular callsigns. Many famous pilots were written down, but they lack call sign for the bulk of all missions. This is an issue that plagued many of my investigations, but it also speaks volumes to the record keeping of the time. 
+
+The Second World War was part of a new development in strategic bombing, and it can be witnessed through Industries targeted and the connection between the ground war and the war in the air. The increase in mission numbers and new developments in technology speaks volumes to the power of war behind human progress. Although the bombing campaign paid a terrible price up the civilians and militaries of the world, it's important to realize how monumental this time period was for the development of modern technology.
+
+Overall, the most powerful convulsion drawn from this is the scope of the war. Witnessing the number of missions done and the weight of all bombs drops speaks volumes to the commitment and investment required to win a war of this scale. As the air war only represents just a small part of the Second World War, making graphs like these truly puts into scope how much had to be done to defeat these countries. Seeing how precariously the Allied Powers were early in the war, especially the UK, is truly important for understanding how difficult changed the tides must've been.
+
+
+
+
+
+
